@@ -143,7 +143,7 @@
       <ModuleDefinitionFile>D3D12.def</ModuleDefinitionFile>
     </Link>
     <PostBuildEvent>
-      <Command>COPY "C:\Users\Marius\Documents\Programming\Github repositories\EldenRingModLoader\x64\Release\d3d12.dll" "G:\SteamLibrary\steamapps\common\ELDEN RING\Game\"</Command>
+      <Command>COPY "C:\Users\Marius\Documents\Programming\Github repositories\EldenRingModLoader\EldenRingModLoader\x64\Release\d3d12.dll" "G:\SteamLibrary\steamapps\common\ELDEN RING\Game\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
