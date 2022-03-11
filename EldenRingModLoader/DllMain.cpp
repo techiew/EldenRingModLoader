@@ -8,7 +8,19 @@ HINSTANCE originalDll = 0;
 
 DWORD WINAPI LoaderThread(LPVOID lpParam)
 {
-	originalDll = LoadLibraryA("C:\\Windows\\System32\\D3D12.dll");
+	std::string systemPath = "";
+	char dummy[1];
+	UINT pathLength = GetSystemDirectoryA(dummy, 1);
+	systemPath.resize(pathLength);
+	LPSTR lpSystemPath = const_cast<char*>(systemPath.c_str());
+	GetSystemDirectoryA(lpSystemPath, systemPath.size());
+	systemPath = lpSystemPath;
+	originalDll = LoadLibraryA(".mods\\d3d12.dll");
+	if (!originalDll)
+	{
+		originalDll = LoadLibraryA(std::string(systemPath + "\\D3D12.dll").c_str());
+	}
+
 	if (originalDll)
 	{
 		// Set function addresses we need for forward exporting
@@ -43,7 +55,7 @@ DWORD WINAPI LoaderThread(LPVOID lpParam)
 		if (AllocConsole())
 		{
 			freopen_s((FILE**)stdout, "CONOUT$", "w", stdout);
-			SetWindowText(GetConsoleWindow(), "Elden Ring Mod Loader");
+			SetWindowText(GetConsoleWindow(), "Elden Mod Loader");
 		}
 		terminalEnableFile.close();
 	}
