@@ -15,7 +15,7 @@ DWORD WINAPI LoaderThread(LPVOID lpParam)
 	LPSTR lpSystemPath = const_cast<char*>(systemPath.c_str());
 	GetSystemDirectoryA(lpSystemPath, systemPath.size());
 	systemPath = lpSystemPath;
-	originalDll = LoadLibraryA(".mods\\d3d12.dll");
+	originalDll = LoadLibraryA("mods\\d3d12.dll");
 	if (!originalDll)
 	{
 		originalDll = LoadLibraryA(std::string(systemPath + "\\D3D12.dll").c_str());
