@@ -83,7 +83,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <TargetName>d3d12</TargetName>
+    <TargetName>dinput8</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -140,17 +140,16 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ModuleDefinitionFile>D3D12.def</ModuleDefinitionFile>
+      <ModuleDefinitionFile>dinput8.def</ModuleDefinitionFile>
     </Link>
     <PostBuildEvent>
-      <Command>COPY "C:\Users\Marius\Documents\Programming\Github repositories\EldenRingModLoader\EldenRingModLoader\x64\Release\d3d12.dll" "G:\SteamLibrary\steamapps\common\ELDEN RING\Game\"</Command>
+      <Command>COPY "C:\Users\Marius\Documents\Programming\Github repositories\EldenRingModLoader\EldenRingModLoader\x64\Release\dinput8.dll" "G:\SteamLibrary\steamapps\common\ELDEN RING\Game\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <MASM Include="Jump.asm">
       <FileType>Document</FileType>
     </MASM>
-    <None Include="D3D12.def" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DllMain.cpp" />
@@ -159,6 +158,12 @@
   <ItemGroup>
     <ClInclude Include="Logger.h" />
     <ClInclude Include="ModLoader.h" />
+    <ClInclude Include="ModUtils.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="dinput8.def" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

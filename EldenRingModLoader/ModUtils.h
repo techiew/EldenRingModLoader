@@ -4,17 +4,26 @@
 #include <string>
 #include <cstdarg>
 
+void GetModDirectory(HMODULE module)
+{
+	std::string fileName = "";
+	GetModuleFileNameA(module, &fileName);
+}
+
 class Logger
 {
 public:
-	Logger(const char* prefix)
+	Logger(HMODULE module)
 	{
 		m_printPrefix = prefix;
 
 		FILE* logFile = LogFile(nullptr);
 		if (logFile == nullptr)
 		{
-			fopen_s(&logFile, "mod_loader_log.txt", "w");
+			std::string directory = ".\\mods\\" + m_printPrefix;
+			std::string txtFile = directory + "\\" + m_printPrefix + "_log.txt";
+			CreateDirectoryA(directory.c_str(), NULL);
+			fopen_s(&logFile, txtFile.c_str(), "w");
 			LogFile(logFile);
 		}
 	}

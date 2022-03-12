@@ -21,11 +21,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="D3D12.def">
-      <Filter>Module Definition File</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="DllMain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -37,6 +32,9 @@
     <ClInclude Include="ModLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ModUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="Logger.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -45,5 +43,10 @@
     <MASM Include="Jump.asm">
       <Filter>Source Files\Assembly code</Filter>
     </MASM>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="dinput8.def">
+      <Filter>Module Definition File</Filter>
+    </None>
   </ItemGroup>
 </Project>
