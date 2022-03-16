@@ -10,8 +10,10 @@
 class ModLoader
 {
 public:
-	void LoadMods();
+	void LoadDllMods();
+	void OnLoadingDone();
+
 private:
-	Logger m_logger{ "EldenRingModLoader" };
+	Logger m_logger{ "EldenModLoader" };
 	std::string m_modFolder = ".\\mods";
 };

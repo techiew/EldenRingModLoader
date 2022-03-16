@@ -1,22 +1,21 @@
 #include "ModLoader.h"
 
-void ModLoader::LoadMods()
+void ModLoader::LoadDllMods()
 {
-    m_logger.Log("Loading mods...");
+    m_logger.Log("Loading .dll mods...");
     size_t modCount = 0;
     CreateDirectoryA(m_modFolder.c_str(), NULL);
     for (auto& file : std::filesystem::recursive_directory_iterator(m_modFolder))
     {
-        if (file.path().extension() == ".dll")
+        std::string extension = file.path().extension().string();
+        std::string path = file.path().parent_path().string();
+        if (extension == ".dll" && path == m_modFolder)
         {
-            std::string modName = file.path().stem().string();
             std::string dllName = file.path().stem().string() + ".dll";
             m_logger.Log("Loading %s...", dllName.c_str());
-            if (LoadLibraryA(std::string(m_modFolder + "\\" + dllName).c_str()))
+            if (LoadLibraryA(std::string(path + "\\" + dllName).c_str()))
             {
-                m_logger.Log("Successfully loaded %s", dllName.c_str());
-                std::string directory = m_modFolder + "\\" + modName;
-                CreateDirectoryA(directory.c_str(), NULL);
+                Sleep(1000);
             }
             else
             {
@@ -26,6 +25,10 @@ void ModLoader::LoadMods()
             modCount++;
         }
     }
-    m_logger.Log("Loaded %i mods", modCount);
+    m_logger.Log("Loaded %i .dll mods", modCount);
+}
+
+void ModLoader::OnLoadingDone()
+{
     m_logger.Close();
 }

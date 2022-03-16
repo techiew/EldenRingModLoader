@@ -8,16 +8,12 @@ HINSTANCE originalDll = 0;
 
 DWORD WINAPI LoaderThread(LPVOID lpParam)
 {
-	std::string systemPath = "";
-	char dummy[1];
-	UINT pathLength = GetSystemDirectoryA(dummy, 1);
-	systemPath.resize(pathLength);
-	LPSTR lpSystemPath = const_cast<char*>(systemPath.c_str());
-	GetSystemDirectoryA(lpSystemPath, systemPath.size());
-	systemPath = lpSystemPath;
 	originalDll = LoadLibraryA("mods\\dinput8.dll");
 	if (!originalDll)
 	{
+		char lpBuffer[MAX_PATH];
+		GetSystemDirectoryA(lpBuffer, MAX_PATH);
+		std::string systemPath = lpBuffer;
 		originalDll = LoadLibraryA(std::string(systemPath + "\\dinput8.dll").c_str());
 	}
 
@@ -48,8 +44,9 @@ DWORD WINAPI LoaderThread(LPVOID lpParam)
 		terminalEnableFile.close();
 	}
 
-	static ModLoader loader;
-	loader.LoadMods();
+	ModLoader loader;
+	loader.LoadDllMods();
+	loader.OnLoadingDone();
 	return S_OK;
 }
 
