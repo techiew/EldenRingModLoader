@@ -9,16 +9,6 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-    <Filter Include="Module Definition File">
-      <UniqueIdentifier>{ec06ab43-7c49-4927-9575-9e9590733812}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Assembly code">
-      <UniqueIdentifier>{29f250a7-ccf4-42c4-9cb3-957e45822f48}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DllMain.cpp">
@@ -35,15 +25,5 @@
     <ClInclude Include="Logger.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <MASM Include="Jump.asm">
-      <Filter>Source Files\Assembly code</Filter>
-    </MASM>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="dinput8.def">
-      <Filter>Module Definition File</Filter>
-    </None>
   </ItemGroup>
 </Project>

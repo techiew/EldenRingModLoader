@@ -7,7 +7,6 @@ void ModLoader::LoadDllMods()
     fs::create_directories(m_modFolder);
     for (auto& file : fs::recursive_directory_iterator(m_modFolder))
     {
-        // Should be a regular file only
         if (fs::is_regular_file(file))
         {
             fs::path extension = file.path().extension();

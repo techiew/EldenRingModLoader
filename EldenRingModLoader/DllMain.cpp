@@ -3,34 +3,18 @@
 
 #include "ModLoader.h"
 
-FARPROC originalFunctions[18];
-HINSTANCE originalDll = 0;
+#pragma comment(linker, "/export:DirectInput8Create=C:\\\\Windows\\\\System32\\\\dinput8.dll.DirectInput8Create")
+#pragma comment(linker, "/export:DllCanUnloadNow=C:\\\\Windows\\\\System32\\\\dinput8.dll.DllCanUnloadNow,PRIVATE")
+#pragma comment(linker, "/export:DllGetClassObject=C:\\\\Windows\\\\System32\\\\dinput8.dll.DllGetClassObject,PRIVATE")
+#pragma comment(linker, "/export:DllRegisterServer=C:\\\\Windows\\\\System32\\\\dinput8.dll.DllRegisterServer,PRIVATE")
+#pragma comment(linker, "/export:DllUnregisterServer=C:\\\\Windows\\\\System32\\\\dinput8.dll.DllUnregisterServer,PRIVATE")
+#pragma comment(linker, "/export:GetdfDIJoystick=C:\\\\Windows\\\\System32\\\\dinput8.dll.GetdfDIJoystick")
 
 DWORD WINAPI LoaderThread(LPVOID lpParam)
 {
-	originalDll = LoadLibraryA("mods\\dinput8.dll");
-	if (!originalDll)
-	{
-		char lpBuffer[MAX_PATH];
-		GetSystemDirectoryA(lpBuffer, MAX_PATH);
-		std::string systemPath = lpBuffer;
-		originalDll = LoadLibraryA(std::string(systemPath + "\\dinput8.dll").c_str());
-	}
-
-	if (originalDll)
-	{
-		// Set function addresses we need for forward exporting
-		originalFunctions[0] = GetProcAddress(originalDll, "DirectInput8Create");
-		originalFunctions[1] = GetProcAddress(originalDll, "DllCanUnloadNow");
-		originalFunctions[2] = GetProcAddress(originalDll, "DllGetClassObject");
-		originalFunctions[3] = GetProcAddress(originalDll, "DllRegisterServer");
-		originalFunctions[4] = GetProcAddress(originalDll, "DllUnregisterServer");
-		originalFunctions[5] = GetProcAddress(originalDll, "GetdfDIJoystick");
-	}
-	else
-	{
-		return false;
-	}
+	// The mods use psapi functions and the psapi might not be loaded when we need it (game loads it at some point)?
+	// Loading it in the loader is probably cleaner than making it an explicit dependency for all mods...
+	LoadLibraryA("psapi.dll"); 
 
 	std::fstream terminalEnableFile;
 	terminalEnableFile.open("loader_enable_terminal.txt", std::fstream::in);
@@ -50,43 +34,6 @@ DWORD WINAPI LoaderThread(LPVOID lpParam)
 	return S_OK;
 }
 
-extern "C"
-{
-	FARPROC address = NULL;
-	int AsmJump();
-
-	void PROXY_DirectInput8Create()
-	{
-		address = originalFunctions[0];
-		AsmJump();
-	}
-	void PROXY_DllCanUnloadNow()
-	{
-		address = originalFunctions[1];
-		AsmJump();
-	}
-	void PROXY_DllGetClassObject()
-	{
-		address = originalFunctions[2];
-		AsmJump();
-	}
-	void PROXY_DllRegisterServer()
-	{
-		address = originalFunctions[3];
-		AsmJump();
-	}
-	void PROXY_DllUnregisterServer()
-	{
-		address = originalFunctions[4];
-		AsmJump();
-	}
-	void PROXY_GetdfDIJoystick()
-	{
-		address = originalFunctions[5];
-		AsmJump();
-	}
-}
-
 BOOL WINAPI DllMain(HINSTANCE module, DWORD reason, LPVOID)
 {
 	if (reason == DLL_PROCESS_ATTACH)
@@ -94,12 +41,5 @@ BOOL WINAPI DllMain(HINSTANCE module, DWORD reason, LPVOID)
 		DisableThreadLibraryCalls(module);
 		CreateThread(0, 0, &LoaderThread, 0, 0, NULL);
 	}
-
-	if (reason == DLL_PROCESS_DETACH)
-	{
-		FreeLibrary(module);
-		return 1;
-	}
-
 	return 1;
 }
