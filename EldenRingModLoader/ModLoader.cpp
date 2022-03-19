@@ -4,25 +4,29 @@ void ModLoader::LoadDllMods()
 {
     m_logger.Log("Loading .dll mods...");
     size_t modCount = 0;
-    CreateDirectoryA(m_modFolder.c_str(), NULL);
-    for (auto& file : std::filesystem::recursive_directory_iterator(m_modFolder))
+    fs::create_directories(m_modFolder);
+    for (auto& file : fs::recursive_directory_iterator(m_modFolder))
     {
-        std::string extension = file.path().extension().string();
-        std::string path = file.path().parent_path().string();
-        if (extension == ".dll" && path == m_modFolder)
+        // Should be a regular file only
+        if (fs::is_regular_file(file))
         {
-            std::string dllName = file.path().stem().string() + ".dll";
-            m_logger.Log("Loading %s...", dllName.c_str());
-            if (LoadLibraryA(std::string(path + "\\" + dllName).c_str()))
+            fs::path extension = file.path().extension();
+            fs::path path = file.path().parent_path();
+            if (extension == ".dll" && path == m_modFolder)
             {
-                Sleep(1000);
+                fs::path dllName = file.path().stem() += ".dll";
+                m_logger.Log("Loading %s...", dllName.string().c_str());
+                if (LoadLibraryW(file.path().c_str()))
+                {
+                    Sleep(1000);
+                }
+                else
+                {
+                    m_logger.Log("Failed to load %s", dllName.string().c_str());
+                    MessageBox( NULL, std::string("Failed to load " + dllName.string()).c_str(), "Mod Loader", MB_OK | MB_ICONINFORMATION | MB_SYSTEMMODAL);
+                }
+                modCount++;
             }
-            else
-            {
-                m_logger.Log("Failed to load %s", dllName.c_str());
-                MessageBox(NULL, std::string("Failed to load " + dllName).c_str(), "Mod Loader", MB_OK | MB_ICONINFORMATION | MB_SYSTEMMODAL);
-            }
-            modCount++;
         }
     }
     m_logger.Log("Loaded %i .dll mods", modCount);
