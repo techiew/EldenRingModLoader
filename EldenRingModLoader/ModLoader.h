@@ -7,6 +7,8 @@
 
 #include "Logger.h"
 
+namespace fs = std::filesystem;
+
 class ModLoader
 {
 public:
