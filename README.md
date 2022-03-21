@@ -5,7 +5,7 @@ If you want to develop a mod for this, package your code into a .dll and put it 
 
 Download the mod loader: https://www.nexusmods.com/eldenring/mods/117
 
-***Planned features***
+### Planned features:
 - Runtime merging of multiple regulation.bin mods.
 - File injection/redirection of individual loose files, removing the need to unpack the game.
 
