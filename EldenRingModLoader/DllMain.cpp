@@ -12,8 +12,6 @@
 
 DWORD WINAPI LoaderThread(LPVOID lpParam)
 {
-	// The mods use psapi functions and the psapi might not be loaded when we need it (game loads it at some point)?
-	// Loading it in the loader is probably cleaner than making it an explicit dependency for all mods...
 	LoadLibraryA("psapi.dll"); 
 
 	std::fstream terminalEnableFile;
@@ -30,7 +28,7 @@ DWORD WINAPI LoaderThread(LPVOID lpParam)
 
 	ModLoader loader;
 	loader.LoadDllMods();
-	loader.OnLoadingDone();
+	loader.WhenLoadingDone();
 	return S_OK;
 }
 

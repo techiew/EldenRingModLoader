@@ -22,7 +22,7 @@ void ModLoader::LoadDllMods()
                 else
                 {
                     m_logger.Log("Failed to load %s", dllName.string().c_str());
-                    MessageBox( NULL, std::string("Failed to load " + dllName.string()).c_str(), "Mod Loader", MB_OK | MB_ICONINFORMATION | MB_SYSTEMMODAL);
+                    MessageBox( NULL, std::string("Failed to load " + dllName.string()).c_str(), "Elden Mod Loader", MB_OK | MB_ICONINFORMATION | MB_SYSTEMMODAL);
                 }
                 modCount++;
             }
@@ -31,7 +31,7 @@ void ModLoader::LoadDllMods()
     m_logger.Log("Loaded %i .dll mods", modCount);
 }
 
-void ModLoader::OnLoadingDone()
+void ModLoader::WhenLoadingDone()
 {
     m_logger.Close();
 }

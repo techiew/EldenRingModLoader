@@ -13,7 +13,7 @@ class ModLoader
 {
 public:
 	void LoadDllMods();
-	void OnLoadingDone();
+	void WhenLoadingDone();
 
 private:
 	Logger m_logger{ "EldenModLoader" };
