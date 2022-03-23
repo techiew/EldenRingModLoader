@@ -1,5 +1,31 @@
 #include "ModLoader.h"
 
+void ModLoader::ReadConfigFile()
+{
+    INIFile config("mod_loader_config.ini");
+    INIStructure ini;
+
+    if (config.read(ini))
+    {
+        loadDelay = std::stoi(ini["modloader"].get("load_delay"));
+        showTerminal = std::stoi(ini["modloader"].get("show_terminal")) != 0;
+    }
+    else
+    {
+        ini["modloader"]["load_delay"] = std::to_string(loadDelay);
+        ini["modloader"]["Show_Terminal"] = std::to_string(showTerminal);
+        config.write(ini, true);
+    }
+
+    if (showTerminal)
+    {
+        OpenTerminal();
+    }
+
+    m_logger.Log("Load delay: %i", loadDelay);
+    m_logger.Log("Show terminal: %i", showTerminal);
+}
+
 void ModLoader::LoadDllMods()
 {
     m_logger.Log("Loading .dll mods...");
@@ -29,6 +55,15 @@ void ModLoader::LoadDllMods()
         }
     }
     m_logger.Log("Loaded %i .dll mods", modCount);
+}
+
+void ModLoader::OpenTerminal()
+{
+    if (AllocConsole())
+    {
+        freopen_s((FILE**)stdout, "CONOUT$", "w", stdout);
+        SetWindowText(GetConsoleWindow(), "Elden Mod Loader");
+    }
 }
 
 void ModLoader::WhenLoadingDone()

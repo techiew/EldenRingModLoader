@@ -13,20 +13,9 @@
 DWORD WINAPI LoaderThread(LPVOID lpParam)
 {
 	LoadLibraryA("psapi.dll"); 
-
-	std::fstream terminalEnableFile;
-	terminalEnableFile.open("loader_enable_terminal.txt", std::fstream::in);
-	if (terminalEnableFile.is_open())
-	{
-		if (AllocConsole())
-		{
-			freopen_s((FILE**)stdout, "CONOUT$", "w", stdout);
-			SetWindowText(GetConsoleWindow(), "Elden Mod Loader");
-		}
-		terminalEnableFile.close();
-	}
-
+	Sleep(5000);
 	ModLoader loader;
+	loader.ReadConfigFile();
 	loader.LoadDllMods();
 	loader.WhenLoadingDone();
 	return S_OK;
