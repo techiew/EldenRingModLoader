@@ -14,6 +14,8 @@ using namespace mINI;
 class ModLoader
 {
 public:
+	DWORD loadDelay = 5000;
+
 	void ReadConfigFile();
 	void LoadDllMods();
 	void OpenTerminal();
@@ -22,6 +24,5 @@ public:
 private:
 	Logger m_logger{ "EldenModLoader" };
 	std::string m_modFolder = ".\\mods";
-	DWORD loadDelay = 5000;
 	bool showTerminal = false;
 };
