@@ -4,6 +4,7 @@
 #include <filesystem>
 #include <Windows.h>
 #include <libloaderapi.h>
+#include <string>
 
 #include "Logger.h"
 #include "ini.h"
@@ -14,15 +15,17 @@ using namespace mINI;
 class ModLoader
 {
 public:
-	DWORD loadDelay = 5000;
-
-	void ReadConfigFile();
-	void LoadDllMods();
-	void OpenTerminal();
-	void WhenLoadingDone();
+	void LoadMods();
 
 private:
 	Logger m_logger{ "EldenModLoader" };
 	std::string m_modFolder = ".\\mods";
-	bool showTerminal = false;
+	DWORD m_loadDelay = 5000;
+	bool m_showTerminal = false;
+
+	void ReadConfigFile();
+	std::vector<std::pair<int64_t, std::string>> FindModsAndReadLoadOrders();
+	void LoadDllMods();
+	void OpenTerminal();
+	void OnLoadingDone();
 };
