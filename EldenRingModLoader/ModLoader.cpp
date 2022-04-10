@@ -82,14 +82,20 @@ std::vector<std::pair<int64_t, std::string>> ModLoader::FindModsAndReadLoadOrder
 void ModLoader::LoadDllMods()
 {
     auto dllMods = FindModsAndReadLoadOrders();
-    Sleep(m_loadDelay);
 
+	bool hasSlept = false;
     m_logger.Log("Loading .dll mods...");
     size_t modCount = 0;
     for (size_t i = 0; i < dllMods.size(); i++)
     {
         int64_t loadOrder = dllMods[i].first;
         std::string dllName = dllMods[i].second;
+
+		if (loadOrder != 1 && !hasSlept)
+		{
+			Sleep(m_loadDelay);
+			hasSlept = true;
+		}
 
         m_logger.Log("Loading %s...", dllName.c_str());
         if (LoadLibraryA(std::string(m_modFolder + "\\" + dllName).c_str()))
