@@ -38,6 +38,7 @@ std::vector<std::pair<int64_t, std::string>> ModLoader::FindModsAndReadLoadOrder
     m_logger.Log("Finding mods...");
 
     std::vector<std::pair<int64_t, std::string>> dllMods;
+	constexpr int automaticLoadOrder = -1;
     fs::create_directories(m_modFolder);
     for (auto file : fs::recursive_directory_iterator(m_modFolder))
     {
@@ -48,7 +49,7 @@ std::vector<std::pair<int64_t, std::string>> ModLoader::FindModsAndReadLoadOrder
             if (extension == ".dll" && path == m_modFolder)
             {
                 std::string modName = file.path().stem().string();
-                int64_t loadOrder = 0;
+                int64_t loadOrder = automaticLoadOrder;
 
                 std::ifstream loadOrderFile(m_modFolder + "\\" + modName + "\\load.txt", std::ios::binary);
                 if (loadOrderFile.is_open())
@@ -58,20 +59,21 @@ std::vector<std::pair<int64_t, std::string>> ModLoader::FindModsAndReadLoadOrder
                     std::stringstream stringStream(line);
                     stringStream >> loadOrder;
                 }
-
-                if (loadOrder > -1)
-                {
-                    dllMods.push_back(std::make_pair(loadOrder, modName + ".dll"));
-                }
+				
+				dllMods.push_back(std::make_pair(loadOrder, modName + ".dll"));
             }
         }
     }
 
     for (auto& mod : dllMods)
     {
-        if (mod.first == 0)
+        if (mod.first == automaticLoadOrder)
         {
             mod.first = std::max_element(dllMods.begin(), dllMods.end())->first + 1;
+			if (mod.first == 0)
+			{
+				mod.first = 1;
+			}
         }
     }
 
@@ -83,15 +85,17 @@ void ModLoader::LoadDllMods()
 {
     auto dllMods = FindModsAndReadLoadOrders();
 
+	m_logger.Log("Loading .dll mods...");
+
+	size_t modCount = 0;
 	bool hasSlept = false;
-    m_logger.Log("Loading .dll mods...");
-    size_t modCount = 0;
+	constexpr int loadInstantly = 0;
     for (size_t i = 0; i < dllMods.size(); i++)
     {
         int64_t loadOrder = dllMods[i].first;
         std::string dllName = dllMods[i].second;
 
-		if (loadOrder != 1 && !hasSlept)
+		if (loadOrder != loadInstantly && hasSlept == false)
 		{
 			Sleep(m_loadDelay);
 			hasSlept = true;
@@ -100,7 +104,8 @@ void ModLoader::LoadDllMods()
         m_logger.Log("Loading %s...", dllName.c_str());
         if (LoadLibraryA(std::string(m_modFolder + "\\" + dllName).c_str()))
         {
-            if (i != dllMods.size() - 1 && dllMods[i + 1].first != loadOrder)
+			bool nextModHasSameLoadOrder = i != dllMods.size() - 1 && dllMods[i + 1].first == loadOrder;
+            if (nextModHasSameLoadOrder == false)
             {
                 Sleep(1000);
             }
