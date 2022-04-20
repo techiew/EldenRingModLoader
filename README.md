@@ -1,13 +1,17 @@
 # Elden Mod Loader
-A mod loader for Elden Ring which simply loads all .dlls found in the "mods" folder when the game starts. Has support for load order customization which is required for some types of mods to work. 
+A mod loader for Elden Ring which simply loads all DLLs found in the "mods" folder when the game starts.
 
 You can find the mods I've made for the mod loader in this repo: https://github.com/techiew/EldenRingMods
 
 ## Mod framework
-If you want to develop a mod of this type, I recommend checking out [ModUtils.h](https://github.com/techiew/EldenRingMods/blob/master/ModUtils.h) in the mods repo. This header-only library contains various helpful tools such as a signature scanner, safe memory manipulation functions and a logger which logs to both std::out and a log file simultaneously.
+If you want to develop a DLL mod, I recommend checking out [ModUtils.h](https://github.com/techiew/EldenRingMods/blob/master/ModUtils.h) in the mods repo. This header-only library contains various helpful tools such as a signature scanner, safe memory manipulation functions and a logger for troubleshooting.
 
 ## Load ordering
-To specify a load order for a mod, first create a folder inside the "mods" folder with the same name as the DLL. Inside this folder, create "load.txt" and enter a number. Mods are loaded in order from the lowest to the highest number (smallest possible number is 0). Mods with a load order of 0 will be loaded instantly, ignoring the load delay inside "mod_loader_config.ini". I recommend not using 0 unless the mod is absolutely required to have an immediate effect, as race conditions may occur (which in addition will differ from computer to computer).
+To specify a load order for a mod, create a folder with the same name as your DLL inside the "mods" folder. Inside the folder create "load.txt" and enter the load order number, which must go from 0 and up. Mods will load in order from lowest to highest number with an interval of 1 second. 
+
+Mods with a load order of 0 will be loaded instantly, even ignoring the load delay set inside "mod_loader_config.ini". I recommend not using 0 unless the mod is absolutely required to have an immediate effect, as race conditions may occur for some types of mods if they load too quickly.
+
+If a load order is not specified for a mod, it will automatically receive a load order after the highest specified load order. Mods can have the same load order number, in which case they will load at the same time.
 
 ## Compilation
 You will get an error. Remove the post-build event for the project: Project Properties -> Build Events -> Post-Build Event -> Command Line.
