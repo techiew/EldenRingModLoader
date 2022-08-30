@@ -58,6 +58,7 @@ std::vector<std::pair<int64_t, std::string>> ModLoader::FindModsAndReadLoadOrder
                 int64_t loadOrder = automaticLoadOrder;
                 std::string load = ini["loadorder"].get(modName);
 
+                //Just in case someone adds ".dll" to their load order.  
                 if (load == "") {
                     load = ini["loadorder"].get(modName + ".dll");
                 }
