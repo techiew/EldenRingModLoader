@@ -1,5 +1,6 @@
 #include "ModLoader.h"
 
+
 void ModLoader::LoadMods()
 {
     ReadConfigFile();
@@ -7,15 +8,17 @@ void ModLoader::LoadMods()
     OnLoadingDone();
 }
 
+INIFile config("mod_loader_config.ini");;
+INIStructure ini;
+
 void ModLoader::ReadConfigFile()
 {
-    INIFile config("mod_loader_config.ini");
-    INIStructure ini;
 
     if (config.read(ini))
     {
         m_loadDelay = std::stoi(ini["modloader"].get("load_delay"));
         m_showTerminal = std::stoi(ini["modloader"].get("show_terminal")) != 0;
+
     }
     else
     {
@@ -29,6 +32,7 @@ void ModLoader::ReadConfigFile()
         OpenTerminal();
     }
 
+
     m_logger.Log("Load delay: %i", m_loadDelay);
     m_logger.Log("Show terminal: %i", m_showTerminal);
 }
@@ -36,34 +40,46 @@ void ModLoader::ReadConfigFile()
 std::vector<std::pair<int64_t, std::string>> ModLoader::FindModsAndReadLoadOrders()
 {
     m_logger.Log("Finding mods...");
-
     std::vector<std::pair<int64_t, std::string>> dllMods;
-	constexpr int automaticLoadOrder = -1;
+    constexpr int automaticLoadOrder = -1;
     fs::create_directories(m_modFolder);
+
     for (auto file : fs::recursive_directory_iterator(m_modFolder))
     {
         if (file.is_regular_file())
         {
+
             fs::path extension = file.path().extension();
             fs::path path = file.path().parent_path();
             if (extension == ".dll" && path == m_modFolder)
             {
                 std::string modName = file.path().stem().string();
                 int64_t loadOrder = automaticLoadOrder;
+                std::string load = ini["loadorder"].get(modName);
 
-                std::ifstream loadOrderFile(m_modFolder + "\\" + modName + "\\load.txt", std::ios::binary);
+                if (load == "") {
+                    load = ini["loadorder"].get(modName + ".dll");
+                }
+
+                if (load != "") {
+                    loadOrder = stoi(load);
+                }
+
+                printf("%s = %d\n", modName, loadOrder);
+				/* std::ifstream loadOrderFile(m_modFolder + "\\" + modName + "\\load.txt", std::ios::binary);
                 if (loadOrderFile.is_open())
                 {
                     std::string line = "";
                     getline(loadOrderFile, line);
                     std::stringstream stringStream(line);
                     stringStream >> loadOrder;
-                }
-				
-				dllMods.push_back(std::make_pair(loadOrder, modName + ".dll"));
+                }*/
+
+                dllMods.push_back(std::make_pair(loadOrder, modName + ".dll"));
             }
         }
     }
+
 
     for (auto& mod : dllMods)
     {
@@ -83,10 +99,9 @@ std::vector<std::pair<int64_t, std::string>> ModLoader::FindModsAndReadLoadOrder
 
 void ModLoader::LoadDllMods()
 {
-    auto dllMods = FindModsAndReadLoadOrders();
-
 	m_logger.Log("Loading .dll mods...");
 
+    auto dllMods = FindModsAndReadLoadOrders();
 	size_t modCount = 0;
 	bool hasSlept = false;
 	constexpr int loadInstantly = 0;
