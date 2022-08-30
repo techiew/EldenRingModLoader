@@ -65,16 +65,6 @@ std::vector<std::pair<int64_t, std::string>> ModLoader::FindModsAndReadLoadOrder
                     loadOrder = stoi(load);
                 }
 
-                printf("%s = %d\n", modName, loadOrder);
-				/* std::ifstream loadOrderFile(m_modFolder + "\\" + modName + "\\load.txt", std::ios::binary);
-                if (loadOrderFile.is_open())
-                {
-                    std::string line = "";
-                    getline(loadOrderFile, line);
-                    std::stringstream stringStream(line);
-                    stringStream >> loadOrder;
-                }*/
-
                 dllMods.push_back(std::make_pair(loadOrder, modName + ".dll"));
             }
         }
