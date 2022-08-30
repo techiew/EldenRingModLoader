@@ -7,7 +7,11 @@ You can find the mods I've made for the mod loader in this repo: https://github.
 If you want to develop a DLL mod, I recommend checking out [ModUtils.h](https://github.com/techiew/EldenRingMods/blob/master/ModUtils.h) in the mods repo. This header-only library contains various helpful tools such as a signature scanner, safe memory manipulation functions and a logger for troubleshooting.
 
 ## Load ordering
-To specify a load order for a mod, create a folder with the same name as your DLL inside the "mods" folder. Inside the folder create "load.txt" and enter the load order number, which must go from 0 and up. Mods will load in order from lowest to highest number with an interval of 1 second. 
+Just add the dll name under the loadorder section
+```
+[loadorder]
+ErdTools = 1
+```
 
 Mods with a load order of 0 will be loaded instantly, even ignoring the load delay set inside "mod_loader_config.ini". I recommend not using 0 unless the mod is absolutely required to have an immediate effect, as race conditions may occur for some types of mods if they load too quickly.
 
