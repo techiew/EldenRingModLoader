@@ -43,6 +43,7 @@ std::vector<std::pair<int64_t, std::string>> ModLoader::FindModsAndReadLoadOrder
     std::vector<std::pair<int64_t, std::string>> dllMods;
     constexpr int automaticLoadOrder = -1;
     fs::create_directories(m_modFolder);
+    m_logger.Log("Load Order:\n");
 
     for (auto file : fs::recursive_directory_iterator(m_modFolder))
     {
@@ -64,6 +65,8 @@ std::vector<std::pair<int64_t, std::string>> ModLoader::FindModsAndReadLoadOrder
                 if (load != "") {
                     loadOrder = stoi(load);
                 }
+
+                m_logger.Log("\t%s = %d\n", modName, loadOrder);
 
                 dllMods.push_back(std::make_pair(loadOrder, modName + ".dll"));
             }
