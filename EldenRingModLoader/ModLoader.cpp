@@ -67,7 +67,7 @@ std::vector<std::pair<int64_t, std::string>> ModLoader::FindModsAndReadLoadOrder
                     loadOrder = stoi(load);
                 }
 
-                m_logger.Log("\t%s = %d\n", modName, loadOrder);
+                m_logger.Log("\t%s = %d\n", modName.c_str(), loadOrder);
 
                 dllMods.push_back(std::make_pair(loadOrder, modName + ".dll"));
             }
