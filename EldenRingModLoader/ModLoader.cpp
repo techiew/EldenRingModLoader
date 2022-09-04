@@ -44,7 +44,6 @@ std::vector<std::pair<int64_t, std::string>> ModLoader::FindModsAndReadLoadOrder
     {
         if (file.is_regular_file())
         {
-
             fs::path extension = file.path().extension();
             fs::path path = file.path().parent_path();
             if (extension == ".dll" && path == m_modFolder)
@@ -66,9 +65,9 @@ std::vector<std::pair<int64_t, std::string>> ModLoader::FindModsAndReadLoadOrder
                 if (load == "") {
                     load = ini["loadorder"].get(modName + ".dll");
                 }
-
                 if (load != "") {
-                    loadOrder = stoi(load);
+                    std::stringstream stringStream(load);
+                    stringStream >> loadOrder;
                 }
 
                 m_logger.Log("  %s = %d", modName.c_str(), loadOrder);
