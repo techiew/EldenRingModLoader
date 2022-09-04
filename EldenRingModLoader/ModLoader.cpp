@@ -1,15 +1,11 @@
 #include "ModLoader.h"
 
-
 void ModLoader::LoadMods()
 {
     ReadConfigFile();
     LoadDllMods();
     OnLoadingDone();
 }
-
-INIFile config("mod_loader_config.ini");;
-INIStructure ini;
 
 void ModLoader::ReadConfigFile()
 {
@@ -18,7 +14,6 @@ void ModLoader::ReadConfigFile()
     {
         m_loadDelay = std::stoi(ini["modloader"].get("load_delay"));
         m_showTerminal = std::stoi(ini["modloader"].get("show_terminal")) != 0;
-
     }
     else
     {
@@ -32,7 +27,6 @@ void ModLoader::ReadConfigFile()
         OpenTerminal();
     }
 
-
     m_logger.Log("Load delay: %i", m_loadDelay);
     m_logger.Log("Show terminal: %i", m_showTerminal);
 }
@@ -40,6 +34,7 @@ void ModLoader::ReadConfigFile()
 std::vector<std::pair<int64_t, std::string>> ModLoader::FindModsAndReadLoadOrders()
 {
     m_logger.Log("Finding mods...");
+
     std::vector<std::pair<int64_t, std::string>> dllMods;
     constexpr int automaticLoadOrder = -1;
     fs::create_directories(m_modFolder);
@@ -82,7 +77,6 @@ std::vector<std::pair<int64_t, std::string>> ModLoader::FindModsAndReadLoadOrder
             }
         }
     }
-
 
     for (auto& mod : dllMods)
     {

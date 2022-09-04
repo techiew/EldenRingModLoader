@@ -28,4 +28,7 @@ private:
 	void LoadDllMods();
 	void OpenTerminal();
 	void OnLoadingDone();
+	INIFile config = INIFile("mod_loader_config.ini");
+	INIStructure ini;
+
 };
