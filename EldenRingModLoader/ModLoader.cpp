@@ -95,9 +95,10 @@ std::vector<std::pair<int64_t, std::string>> ModLoader::FindModsAndReadLoadOrder
 
 void ModLoader::LoadDllMods()
 {
+    auto dllMods = FindModsAndReadLoadOrders();
+
 	m_logger.Log("Loading .dll mods...");
 
-    auto dllMods = FindModsAndReadLoadOrders();
 	size_t modCount = 0;
 	bool hasSlept = false;
 	constexpr int loadInstantly = 0;
