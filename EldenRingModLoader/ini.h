@@ -83,7 +83,6 @@
 #ifndef MINI_INI_H_
 #define MINI_INI_H_
 
-
 #include <string>
 #include <sstream>
 #include <algorithm>
