@@ -55,7 +55,7 @@
       </ModuleDefinitionFile>
     </Link>
     <PostBuildEvent>
-      <Command>COPY "C:\Users\Marius\Documents\Programming\Github repositories\EldenRingModLoader\EldenRingModLoader\x64\Release\dinput8.dll" "G:\SteamLibrary\steamapps\common\ELDEN RING\Game\"</Command>
+      <Command>COPY "C:\Programming\Github repositories\EldenRingModLoader\EldenRingModLoader\x64\Release\dinput8.dll" "G:\SteamLibrary\steamapps\common\ELDEN RING\Game\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

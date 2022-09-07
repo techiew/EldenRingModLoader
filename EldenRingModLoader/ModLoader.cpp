@@ -9,17 +9,18 @@ void ModLoader::LoadMods()
 
 void ModLoader::ReadConfigFile()
 {
+	INIFile config = INIFile("mod_loader_config.ini");
 
-    if (config.read(ini))
+    if (config.read(m_ini))
     {
-        m_loadDelay = std::stoi(ini["modloader"].get("load_delay"));
-        m_showTerminal = std::stoi(ini["modloader"].get("show_terminal")) != 0;
+        m_loadDelay = std::stoi(m_ini["modloader"].get("load_delay"));
+        m_showTerminal = std::stoi(m_ini["modloader"].get("show_terminal")) != 0;
     }
     else
     {
-        ini["modloader"]["load_delay"] = std::to_string(m_loadDelay);
-        ini["modloader"]["show_terminal"] = std::to_string(m_showTerminal);
-        config.write(ini, true);
+		m_ini["modloader"]["load_delay"] = std::to_string(m_loadDelay);
+		m_ini["modloader"]["show_terminal"] = std::to_string(m_showTerminal);
+        config.write(m_ini, true);
     }
 
     if (m_showTerminal)
@@ -36,9 +37,9 @@ std::vector<std::pair<int64_t, std::string>> ModLoader::FindModsAndReadLoadOrder
     m_logger.Log("Finding mods...");
 
     std::vector<std::pair<int64_t, std::string>> dllMods;
-    constexpr int automaticLoadOrder = -1;
-    fs::create_directories(m_modFolder);
-    m_logger.Log("Load Order:");
+	constexpr int automaticLoadOrder = -1;
+	fs::create_directories(m_modFolder);
+	m_logger.Log("Load Order:");
 
     for (auto file : fs::recursive_directory_iterator(m_modFolder))
     {
@@ -60,14 +61,12 @@ std::vector<std::pair<int64_t, std::string>> ModLoader::FindModsAndReadLoadOrder
                     stringStream >> loadOrder;
                 }
 
-                std::string load = ini["loadorder"].get(modName);
-                //Just in case someone adds ".dll" to their load order.  
-                if (load == "") {
-                    load = ini["loadorder"].get(modName + ".dll");
+                std::string overrideLoadOrder = m_ini["loadorder"].get(modName);
+                if (overrideLoadOrder == "") {
+					overrideLoadOrder = m_ini["loadorder"].get(modName + ".dll");
                 }
-                if (load != "") {
-                    std::stringstream stringStream(load);
-                    stringStream >> loadOrder;
+                if (overrideLoadOrder != "") {
+					loadOrder = std::stoi(overrideLoadOrder);
                 }
 
                 m_logger.Log("  %s = %d", modName.c_str(), loadOrder);

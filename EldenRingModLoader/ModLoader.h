@@ -22,13 +22,11 @@ private:
 	std::string m_modFolder = ".\\mods";
 	DWORD m_loadDelay = 5000;
 	bool m_showTerminal = false;
+	INIStructure m_ini;
 
 	void ReadConfigFile();
 	std::vector<std::pair<int64_t, std::string>> FindModsAndReadLoadOrders();
 	void LoadDllMods();
 	void OpenTerminal();
 	void OnLoadingDone();
-	INIFile config = INIFile("mod_loader_config.ini");
-	INIStructure ini;
-
 };
