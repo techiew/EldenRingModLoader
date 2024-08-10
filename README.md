@@ -29,4 +29,4 @@ Download the mod loader: https://www.nexusmods.com/eldenring/mods/117
 ## Possible future features
 ~~- Runtime merging of multiple regulation.bin mods.~~
 
-Mod Engine 2 handles this: https://github.com/soulsmods/ModEngine2 (not officially released yet, but a version is available on the ?ServerName? discord).
+Mod Engine 2 handles this: https://github.com/soulsmods/ModEngine2
